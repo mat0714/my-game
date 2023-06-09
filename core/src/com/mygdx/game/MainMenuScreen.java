@@ -15,7 +15,7 @@ public class MainMenuScreen implements Screen {
         this.game = game;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -25,13 +25,13 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0, 0.2f, 1);
+        ScreenUtils.clear(1, 1, 0.8f, 1);
 
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to My Game!!! ", 100, 150);
+        game.font.draw(game.batch, "Welcome to My Game! ", 100, 150);
         game.font.draw(game.batch, "Tap anywhere to begin!", 100, 100);
         game.batch.end();
 
