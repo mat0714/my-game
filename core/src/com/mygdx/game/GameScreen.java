@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
         platform = new Platform();
         platforms = new Array<>();
 
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 20; i++) {
             Platform platform = new Platform();
             platform.x = platform.getRandomX();
             platform.y = i * 200;
@@ -50,6 +50,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(1, 1, 0.8f, 1);
         camera.update();
+        camera.position.set(character.x + character.width / 2, character.y + 180, 0);
 
         game.batch.setProjectionMatrix(camera.combined);
 
@@ -68,7 +69,7 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.font.draw(game.batch, "Awesome game", 10, Gdx.graphics.getHeight() - 20);
-        game.batch.draw(character.texture, character.x, character.y, character.width, character.height);
+        game.batch.draw(character.textureRegion, character.x, character.y, character.width, character.height);
 
         for(Platform platform : platforms) {
             game.batch.draw(platform.texture, platform.x, platform.y, platform.width, platform.height);
@@ -78,9 +79,11 @@ public class GameScreen implements Screen {
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             character.x -= 200 * Gdx.graphics.getDeltaTime();
+            character.textureRegion.setRegion(0, 0, 1200, 1200);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             character.x += 200 * Gdx.graphics.getDeltaTime();
+            character.textureRegion.setRegion(1200, 0, 1200, 1200);
         }
 
         if(character.x < 0) {
