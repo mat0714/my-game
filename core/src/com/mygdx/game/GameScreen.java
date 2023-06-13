@@ -24,8 +24,8 @@ public class GameScreen implements Screen {
     private final Texture bulletTexture;
     private final Array<Bullet> bullets;
 
-    int numberOfPlatforms = 10;
-    float gravity = -20;
+    int numberOfPlatforms = 20;
+    float gravity = -18;
 
     public GameScreen(final MyGdxGame game) {
         this.game = game;
@@ -127,9 +127,12 @@ public class GameScreen implements Screen {
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            character.jump();
+            character.jump(Gdx.graphics.getDeltaTime());
         }
 
+        if(character.jumpVelocity == 0) {
+            character.canJump = true;
+        }
     }
 
     private void spawnBullets() {

@@ -12,7 +12,7 @@ public class MainCharacter extends Rectangle {
     public TextureRegion textureRegion;
     public Sound jumpSound;
     public float jumpVelocity;
-    private boolean canJump;
+    public boolean canJump;
 
     public MainCharacter() {
         this.texture = new Texture(Gdx.files.internal("character.png"));
@@ -23,10 +23,11 @@ public class MainCharacter extends Rectangle {
         this.canJump = true;
     }
 
-    public void jump() {
+    public void jump(float deltaTime) {
         if(canJump) {
             jumpVelocity += 800;
             jumpSound.play();
+            canJump = false;
         }
     }
 }
