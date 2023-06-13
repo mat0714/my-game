@@ -11,7 +11,6 @@ public class Bullet extends Rectangle {
     public Texture texture;
 
     public Bullet() {
-        this.texture = new Texture(Gdx.files.internal("bullet.png"));
         this.width = 25;
         this.height = 79;
     }

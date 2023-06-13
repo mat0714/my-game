@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
@@ -18,7 +19,9 @@ public class GameScreen implements Screen {
 
     private final OrthographicCamera camera;
     private final MainCharacter character;
+    private final Texture platformTexture;
     private final Array<Platform> platforms;
+    private final Texture bulletTexture;
     private final Array<Bullet> bullets;
 
     int numberOfPlatforms = 10;
@@ -34,6 +37,8 @@ public class GameScreen implements Screen {
         character.x = Gdx.graphics.getWidth() / 2f;
         character.y = 20;
 
+
+        platformTexture = new Texture(Gdx.files.internal("platform.jpg"));
         platforms = new Array<>();
 
         for (int i = 1; i <= numberOfPlatforms; i++) {
@@ -43,6 +48,7 @@ public class GameScreen implements Screen {
             platforms.add(platform);
         }
 
+        bulletTexture = new Texture(Gdx.files.internal("bullet.png"));
         bullets = new Array<>();
 
         timer = new Timer();
@@ -94,11 +100,11 @@ public class GameScreen implements Screen {
         game.batch.draw(character.textureRegion, character.x, character.y, character.width, character.height);
 
         for(Platform platform : platforms) {
-            game.batch.draw(platform.texture, platform.x, platform.y, platform.width, platform.height);
+            game.batch.draw(platformTexture, platform.x, platform.y, platform.width, platform.height);
         }
 
         for(Bullet bullet : bullets) {
-            game.batch.draw(bullet.texture, bullet.x, bullet.y, bullet.width, bullet.height);
+            game.batch.draw(bulletTexture, bullet.x, bullet.y, bullet.width, bullet.height);
         }
 
         game.batch.end();
@@ -135,10 +141,7 @@ public class GameScreen implements Screen {
     }
 
     private boolean isCharacterOnPlatform(Platform platform) {
-        if(character.jumpVelocity <= 0 && character.overlaps(platform) && !(character.y < platform.y)) {
-            return true;
-        }
-        return false;
+        return character.jumpVelocity <= 0 && character.overlaps(platform) && !(character.y < platform.y);
     }
 
     @Override
@@ -164,5 +167,8 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         character.texture.dispose();
+        character.jumpSound.dispose();
+        platformTexture.dispose();
+        bulletTexture.dispose();
     }
 }

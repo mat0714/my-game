@@ -7,10 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Platform extends Rectangle {
 
-    public Texture texture;
-
     public Platform() {
-        this.texture = new Texture(Gdx.files.internal("platform.jpg"));
         this.width = 300;
         this.height = 40;
     }
