@@ -6,17 +6,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
+import com.mygdx.game.GameObjects.Bullet;
 import com.mygdx.game.GameObjects.MainCharacter;
 import com.mygdx.game.GameObjects.Platform;
 
 public class GameScreen implements Screen {
 
-    final MyGdxGame game;
+    private final MyGdxGame game;
+    private final Timer timer;
 
-    OrthographicCamera camera;
-    MainCharacter character;
-    Platform platform;
-    Array<Platform> platforms;
+    private final OrthographicCamera camera;
+    private final MainCharacter character;
+    private final Array<Platform> platforms;
+    private final Array<Bullet> bullets;
+
+    int numberOfPlatforms = 10;
     float gravity = -20;
 
     public GameScreen(final MyGdxGame game) {
@@ -29,15 +34,24 @@ public class GameScreen implements Screen {
         character.x = Gdx.graphics.getWidth() / 2f;
         character.y = 20;
 
-        platform = new Platform();
         platforms = new Array<>();
 
-        for (int i = 1; i < 20; i++) {
+        for (int i = 1; i <= numberOfPlatforms; i++) {
             Platform platform = new Platform();
             platform.x = platform.getRandomX();
             platform.y = i * 200;
             platforms.add(platform);
         }
+
+        bullets = new Array<>();
+
+        timer = new Timer();
+        timer.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                spawnBullets();
+            }
+        },0,10);
 
     }
 
@@ -51,19 +65,27 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(1, 1, 0.8f, 1);
         camera.update();
         camera.position.set(character.x + character.width / 2, character.y + 180, 0);
-
         game.batch.setProjectionMatrix(camera.combined);
 
         character.y += character.jumpVelocity * Gdx.graphics.getDeltaTime();
         character.jumpVelocity += gravity;
 
-        if(character.y < 20) {
+        if(character.y <= 20) {
             character.jumpVelocity = 0;
         }
 
         for(Platform platform : platforms) {
             if (isCharacterOnPlatform(platform)) {
                 character.jumpVelocity = 0;
+            }
+        }
+
+        for(Bullet bullet : bullets) {
+            bullet.y -= 200 * Gdx.graphics.getDeltaTime();
+
+            if(bullet.overlaps(character)) {
+                game.setScreen(new GameScreen(game));
+                dispose();
             }
         }
 
@@ -75,12 +97,17 @@ public class GameScreen implements Screen {
             game.batch.draw(platform.texture, platform.x, platform.y, platform.width, platform.height);
         }
 
+        for(Bullet bullet : bullets) {
+            game.batch.draw(bullet.texture, bullet.x, bullet.y, bullet.width, bullet.height);
+        }
+
         game.batch.end();
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             character.x -= 200 * Gdx.graphics.getDeltaTime();
             character.textureRegion.setRegion(0, 0, 1200, 1200);
         }
+
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             character.x += 200 * Gdx.graphics.getDeltaTime();
             character.textureRegion.setRegion(1200, 0, 1200, 1200);
@@ -96,6 +123,15 @@ public class GameScreen implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             character.jump();
         }
+
+    }
+
+    private void spawnBullets() {
+        Bullet bullet = new Bullet();
+        bullet.x = bullet.getRandomX();
+        bullet.y = 200 * numberOfPlatforms + 500;
+        bullets.add(bullet);
+        System.out.println("add bullet");
     }
 
     private boolean isCharacterOnPlatform(Platform platform) {
@@ -128,6 +164,5 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         character.texture.dispose();
-        platform.texture.dispose();
     }
 }

@@ -16,6 +16,6 @@ public class Platform extends Rectangle {
     }
 
     public float getRandomX() {
-        return MathUtils.random(0, Gdx.graphics.getWidth() - getWidth());
+        return MathUtils.random(0f, (float) Gdx.graphics.getWidth() - getWidth());
     }
 }
