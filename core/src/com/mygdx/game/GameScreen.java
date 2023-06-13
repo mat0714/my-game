@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(1, 1, 0.8f, 1);
         camera.update();
-        camera.position.set(character.x + character.width / 2, character.y + 180, 0);
+        camera.position.set(Gdx.graphics.getWidth() / 2f, character.y + 180, 0);
         game.batch.setProjectionMatrix(camera.combined);
 
         character.y += character.jumpVelocity * Gdx.graphics.getDeltaTime();
@@ -137,7 +137,6 @@ public class GameScreen implements Screen {
         bullet.x = bullet.getRandomX();
         bullet.y = 200 * numberOfPlatforms + 500;
         bullets.add(bullet);
-        System.out.println("add bullet");
     }
 
     private boolean isCharacterOnPlatform(Platform platform) {
