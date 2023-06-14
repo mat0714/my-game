@@ -17,7 +17,7 @@ public class MyGdxGame extends Game {
         music = Gdx.audio.newMusic(Gdx.files.internal("background-music.mp3"));
         music.setLooping(true);
         music.play();
-		this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new WelcomeScreen(this));
 	}
 
 	public void render() {

@@ -5,13 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class EndGameScreen implements Screen {
 
     public final MyGdxGame game;
     public final OrthographicCamera camera;
-    private final Texture welcomeText, pressKeyText;
+    private final Texture welcomeText, pressKeyText, characterTexture;
+    private final TextureRegion characterTextureRegion;
 
     public EndGameScreen(final MyGdxGame game) {
         this.game = game;
@@ -21,7 +23,8 @@ public class EndGameScreen implements Screen {
 
         welcomeText = new Texture(Gdx.files.internal("try-more.png"));
         pressKeyText = new Texture(Gdx.files.internal("press-key-text.png"));
-
+        characterTexture = new Texture(Gdx.files.internal("character.png"));
+        characterTextureRegion = new TextureRegion(characterTexture, 1000, 1000);
     }
 
     @Override
@@ -41,9 +44,10 @@ public class EndGameScreen implements Screen {
                 Gdx.graphics.getHeight() / 2f - welcomeText.getHeight() / 2f + 40);
 
         game.batch.draw(pressKeyText, 90, 70);
+        game.batch.draw(characterTextureRegion, 580, 50, 200, 200);
         game.batch.end();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             game.setScreen(new GameScreen(game));
             dispose();
         }
