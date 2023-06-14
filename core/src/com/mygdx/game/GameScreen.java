@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
             bullet.y -= 200 * Gdx.graphics.getDeltaTime();
 
             if(bullet.overlaps(character)) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new EndGameScreen(game));
                 dispose();
             }
         }
