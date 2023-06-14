@@ -16,16 +16,16 @@ public class MainCharacter extends Rectangle {
 
     public MainCharacter() {
         this.texture = new Texture(Gdx.files.internal("character.png"));
-        this.textureRegion = new TextureRegion(texture, 1200, 1200);
-        this.width = 100;
-        this.height = 100;
+        this.textureRegion = new TextureRegion(texture, 1000, 1000);
+        this.width = 80;
+        this.height = 80;
         this.jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump-sound.mp3"));
         this.canJump = true;
     }
 
     public void jump(float deltaTime) {
         if(canJump) {
-            jumpVelocity += 800;
+            jumpVelocity += 740;
             jumpSound.play();
             canJump = false;
         }

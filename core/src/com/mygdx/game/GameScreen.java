@@ -24,9 +24,10 @@ public class GameScreen implements Screen {
     private final Texture bulletTexture;
     private final Array<Bullet> bullets;
 
-    int numberOfPlatforms = 20;
-    float bulletsInterval = 5;
-    float gravity = -18;
+    private final int numberOfPlatforms = 200;
+    private final int distanceBetweenPlatforms = 230;
+    private final float bulletsCreationInterval = 1;
+    private final float gravity = -18;
 
 
     public GameScreen(final MyGdxGame game) {
@@ -46,7 +47,7 @@ public class GameScreen implements Screen {
         for (int i = 1; i <= numberOfPlatforms; i++) {
             Platform platform = new Platform();
             platform.x = platform.getRandomX();
-            platform.y = i * 200;
+            platform.y = i * distanceBetweenPlatforms;
             platforms.add(platform);
         }
 
@@ -59,7 +60,7 @@ public class GameScreen implements Screen {
             public void run() {
                 spawnBullets();
             }
-        },0,bulletsInterval);
+        },0, bulletsCreationInterval);
     }
 
     @Override
@@ -107,17 +108,16 @@ public class GameScreen implements Screen {
         for(Bullet bullet : bullets) {
             game.batch.draw(bulletTexture, bullet.x, bullet.y, bullet.width, bullet.height);
         }
-
         game.batch.end();
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             character.x -= 200 * Gdx.graphics.getDeltaTime();
-            character.textureRegion.setRegion(0, 0, 1200, 1200);
+            character.textureRegion.setRegion(0, 0, 1000, 1000);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             character.x += 200 * Gdx.graphics.getDeltaTime();
-            character.textureRegion.setRegion(1200, 0, 1200, 1200);
+            character.textureRegion.setRegion(1000, 0, 1000, 1000);
         }
 
         if(character.x < 0) {
@@ -139,7 +139,7 @@ public class GameScreen implements Screen {
     private void spawnBullets() {
         Bullet bullet = new Bullet();
         bullet.x = bullet.getRandomX();
-        bullet.y = 200 * numberOfPlatforms + 500;
+        bullet.y = camera.position.y + 1000;
         bullets.add(bullet);
     }
 
