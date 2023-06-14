@@ -25,7 +25,9 @@ public class GameScreen implements Screen {
     private final Array<Bullet> bullets;
 
     int numberOfPlatforms = 20;
+    float bulletsInterval = 5;
     float gravity = -18;
+
 
     public GameScreen(final MyGdxGame game) {
         this.game = game;
@@ -57,8 +59,7 @@ public class GameScreen implements Screen {
             public void run() {
                 spawnBullets();
             }
-        },0,10);
-
+        },0,bulletsInterval);
     }
 
     @Override
