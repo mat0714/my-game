@@ -16,6 +16,7 @@ public class GameScreen implements Screen {
 
     private final MyGdxGame game;
     private final Timer timer;
+    private final PlatformCounter platformCounter;
 
     private final OrthographicCamera camera;
     private final MainCharacter character;
@@ -32,6 +33,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(final MyGdxGame game) {
         this.game = game;
+        platformCounter = new PlatformCounter();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -77,6 +79,7 @@ public class GameScreen implements Screen {
 
         character.y += character.jumpVelocity * Gdx.graphics.getDeltaTime();
         character.jumpVelocity += gravity;
+        int counter = platformCounter.count(character.y, distanceBetweenPlatforms);
 
         if(character.y <= 20) {
             character.jumpVelocity = 0;
@@ -98,7 +101,7 @@ public class GameScreen implements Screen {
         }
 
         game.batch.begin();
-        game.font.draw(game.batch, "Awesome game", 10, Gdx.graphics.getHeight() - 20);
+        game.font.draw(game.batch, "Platform: " + counter, camera.position.x + 250, camera.position.y + 350);
         game.batch.draw(character.textureRegion, character.x, character.y, character.width, character.height);
 
         for(Platform platform : platforms) {
