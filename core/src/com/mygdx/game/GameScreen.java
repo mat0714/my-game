@@ -114,7 +114,7 @@ public class GameScreen implements Screen {
         }
 
         game.batch.begin();
-        game.font.draw(game.batch, "Platform: " + score, camera.position.x + 250, camera.position.y + 350);
+        game.font.draw(game.batch, "Score: " + score, camera.position.x + 250, camera.position.y + 350);
         game.batch.draw(character.textureRegion, character.x, character.y, character.width, character.height);
 
         for(Platform platform : platforms) {
