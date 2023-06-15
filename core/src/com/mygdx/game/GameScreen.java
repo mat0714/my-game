@@ -3,19 +3,20 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
-import com.mygdx.game.GameObjects.Bullet;
+import com.mygdx.game.GameObjects.Missile;
 import com.mygdx.game.GameObjects.MainCharacter;
 import com.mygdx.game.GameObjects.Platform;
 
 public class GameScreen implements Screen {
 
     private final MyGdxGame game;
-    private final Timer bulletsTimer;
+    private final Timer missilesTimer;
     private final Timer difficultyTimer;
     private final PlatformCounter platformCounter;
 
@@ -23,8 +24,8 @@ public class GameScreen implements Screen {
     private final MainCharacter character;
     private final Texture platformTexture;
     private final Array<Platform> platforms;
-    private final Texture bulletTexture;
-    private final Array<Bullet> bullets;
+    private final Texture missileTexture;
+    private final Array<Missile> missiles;
 
     private final int numberOfPlatforms = 200;
     private final int distanceBetweenPlatforms = 230;
@@ -55,11 +56,11 @@ public class GameScreen implements Screen {
             platforms.add(platform);
         }
 
-        bulletTexture = new Texture(Gdx.files.internal("bullet.png"));
-        bullets = new Array<>();
+        missileTexture = new Texture(Gdx.files.internal("missile.png"));
+        missiles = new Array<>();
 
-        bulletsTimer = new Timer();
-        bulletsTimer.scheduleTask(new Timer.Task() {
+        missilesTimer = new Timer();
+        missilesTimer.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 spawnBullets();
@@ -102,10 +103,11 @@ public class GameScreen implements Screen {
             }
         }
 
-        for(Bullet bullet : bullets) {
-            bullet.y -= 200 * Gdx.graphics.getDeltaTime();
+        for(Missile missile : missiles) {
+            missile.y -= 200 * Gdx.graphics.getDeltaTime();
 
-            if(bullet.overlaps(character)) {
+            if(missile.overlaps(character)) {
+                missile.explosionSound.play();
                 game.setScreen(new EndGameScreen(game, score));
                 dispose();
             }
@@ -119,8 +121,8 @@ public class GameScreen implements Screen {
             game.batch.draw(platformTexture, platform.x, platform.y, platform.width, platform.height);
         }
 
-        for(Bullet bullet : bullets) {
-            game.batch.draw(bulletTexture, bullet.x, bullet.y, bullet.width, bullet.height);
+        for(Missile missile : missiles) {
+            game.batch.draw(missileTexture, missile.x, missile.y, missile.width, missile.height);
         }
         game.batch.end();
 
@@ -151,10 +153,10 @@ public class GameScreen implements Screen {
     }
 
     private void spawnBullets() {
-        Bullet bullet = new Bullet();
-        bullet.x = bullet.getRandomX();
-        bullet.y = camera.position.y + 1000;
-        bullets.add(bullet);
+        Missile missile = new Missile();
+        missile.x = missile.getRandomX();
+        missile.y = camera.position.y + 1000;
+        missiles.add(missile);
     }
 
     private boolean isCharacterOnPlatform(Platform platform) {
@@ -186,6 +188,6 @@ public class GameScreen implements Screen {
         character.texture.dispose();
         character.jumpSound.dispose();
         platformTexture.dispose();
-        bulletTexture.dispose();
+        missileTexture.dispose();
     }
 }

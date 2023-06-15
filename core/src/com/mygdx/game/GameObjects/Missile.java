@@ -1,18 +1,21 @@
 package com.mygdx.game.GameObjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Bullet extends Rectangle {
+public class Missile extends Rectangle {
 
     public Texture texture;
+    public final Sound explosionSound;
 
-    public Bullet() {
-        this.width = 25;
-        this.height = 79;
+    public Missile() {
+        this.width = 30;
+        this.height = 85;
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion-sound.mp3"));
     }
 
     public float getRandomX() {
