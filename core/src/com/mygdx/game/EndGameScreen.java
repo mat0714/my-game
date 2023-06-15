@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -14,9 +15,12 @@ public class EndGameScreen implements Screen {
     private final OrthographicCamera camera;
     private final Texture welcomeText, pressKeyText, characterTexture;
     private final TextureRegion characterTextureRegion;
+    private final BitmapFont font;
+    private final int score;
 
-    public EndGameScreen(final MyGdxGame game) {
+    public EndGameScreen(final MyGdxGame game, int score) {
         this.game = game;
+        this.score = score;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -25,6 +29,8 @@ public class EndGameScreen implements Screen {
         pressKeyText = new Texture(Gdx.files.internal("press-key-text.png"));
         characterTexture = new Texture(Gdx.files.internal("character.png"));
         characterTextureRegion = new TextureRegion(characterTexture, 1000, 1000);
+        font = new BitmapFont();
+        font.setColor(0, 0, 0, 1);
     }
 
     @Override
@@ -45,6 +51,7 @@ public class EndGameScreen implements Screen {
 
         game.batch.draw(pressKeyText, 90, 70);
         game.batch.draw(characterTextureRegion, 580, 50, 200, 200);
+        font.draw(game.batch, "Your score: " + score, 350, 240);
         game.batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
@@ -77,5 +84,6 @@ public class EndGameScreen implements Screen {
     public void dispose() {
         welcomeText.dispose();
         pressKeyText.dispose();
+        font.dispose();
     }
 }

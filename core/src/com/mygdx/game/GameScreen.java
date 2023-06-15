@@ -15,7 +15,8 @@ import com.mygdx.game.GameObjects.Platform;
 public class GameScreen implements Screen {
 
     private final MyGdxGame game;
-    private final Timer timer;
+    private final Timer bulletsTimer;
+    private final Timer difficultyTimer;
     private final PlatformCounter platformCounter;
 
     private final OrthographicCamera camera;
@@ -27,7 +28,8 @@ public class GameScreen implements Screen {
 
     private final int numberOfPlatforms = 200;
     private final int distanceBetweenPlatforms = 230;
-    private float initialBulletsCreationInterval = 0.35f;
+    private float initialBulletsCreationInterval = 0.45f;
+    private final float difficultyIncreasingInterval = 20f;
     private final float gravity = -18;
 
 
@@ -56,13 +58,22 @@ public class GameScreen implements Screen {
         bulletTexture = new Texture(Gdx.files.internal("bullet.png"));
         bullets = new Array<>();
 
-        timer = new Timer();
-        timer.scheduleTask(new Timer.Task() {
+        bulletsTimer = new Timer();
+        bulletsTimer.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 spawnBullets();
             }
         },0, initialBulletsCreationInterval);
+
+        difficultyTimer = new Timer();
+        difficultyTimer.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                initialBulletsCreationInterval += 5;
+            }
+        }, 0, difficultyIncreasingInterval);
+
     }
 
     @Override
@@ -95,7 +106,7 @@ public class GameScreen implements Screen {
             bullet.y -= 200 * Gdx.graphics.getDeltaTime();
 
             if(bullet.overlaps(character)) {
-                game.setScreen(new EndGameScreen(game));
+                game.setScreen(new EndGameScreen(game, score));
                 dispose();
             }
         }
