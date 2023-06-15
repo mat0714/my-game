@@ -12,7 +12,7 @@ public class WelcomeScreen implements Screen {
 
     private final MyGdxGame game;
     private final OrthographicCamera camera;
-    private final Texture welcomeText, pressKeyText, characterTexture;
+    private final Texture welcomeText, pressKeyText, movementText, characterTexture;
     private final TextureRegion characterTextureRegion;
 
     public WelcomeScreen(final MyGdxGame game) {
@@ -23,6 +23,7 @@ public class WelcomeScreen implements Screen {
 
         welcomeText = new Texture(Gdx.files.internal("welcome-text.png"));
         pressKeyText = new Texture(Gdx.files.internal("press-key-text.png"));
+        movementText = new Texture(Gdx.files.internal("movement-text.png"));
         characterTexture = new Texture(Gdx.files.internal("character.png"));
         characterTextureRegion = new TextureRegion(characterTexture, 1000, 1000);
     }
@@ -44,6 +45,7 @@ public class WelcomeScreen implements Screen {
                 Gdx.graphics.getHeight() / 2f - welcomeText.getHeight() / 2f + 40);
 
         game.batch.draw(pressKeyText, 90, 70);
+        game.batch.draw(movementText, 240, 7);
         game.batch.draw(characterTextureRegion, 580, 50, 200, 200);
         game.batch.end();
 
