@@ -27,7 +27,7 @@ public class GameScreen implements Screen {
 
     private final int numberOfPlatforms = 200;
     private final int distanceBetweenPlatforms = 230;
-    private final float bulletsCreationInterval = 1;
+    private float initialBulletsCreationInterval = 0.35f;
     private final float gravity = -18;
 
 
@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
             public void run() {
                 spawnBullets();
             }
-        },0, bulletsCreationInterval);
+        },0, initialBulletsCreationInterval);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class GameScreen implements Screen {
 
         character.y += character.jumpVelocity * Gdx.graphics.getDeltaTime();
         character.jumpVelocity += gravity;
-        int counter = platformCounter.count(character.y, distanceBetweenPlatforms);
+        int score = platformCounter.count(character.y, distanceBetweenPlatforms);
 
         if(character.y <= 20) {
             character.jumpVelocity = 0;
@@ -101,7 +101,7 @@ public class GameScreen implements Screen {
         }
 
         game.batch.begin();
-        game.font.draw(game.batch, "Platform: " + counter, camera.position.x + 250, camera.position.y + 350);
+        game.font.draw(game.batch, "Platform: " + score, camera.position.x + 250, camera.position.y + 350);
         game.batch.draw(character.textureRegion, character.x, character.y, character.width, character.height);
 
         for(Platform platform : platforms) {

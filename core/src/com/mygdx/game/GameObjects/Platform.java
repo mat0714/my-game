@@ -9,7 +9,7 @@ public class Platform extends Rectangle {
 
     public Platform() {
         this.width = 300;
-        this.height = 40;
+        this.height = 20;
     }
 
     public float getRandomX() {

@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class WelcomeScreen implements Screen {
 
-    public final MyGdxGame game;
-    public final OrthographicCamera camera;
+    private final MyGdxGame game;
+    private final OrthographicCamera camera;
     private final Texture welcomeText, pressKeyText, characterTexture;
     private final TextureRegion characterTextureRegion;
 
