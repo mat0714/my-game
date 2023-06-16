@@ -3,12 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.GameObjects.Missile;
 import com.mygdx.game.GameObjects.MainCharacter;
 import com.mygdx.game.GameObjects.Platform;
@@ -16,9 +14,6 @@ import com.mygdx.game.GameObjects.Platform;
 public class GameScreen implements Screen {
 
     private final MyGdxGame game;
-    private final Timer missilesTimer;
-    private final Timer difficultyTimer;
-    private final PlatformCounter platformCounter;
 
     private final OrthographicCamera camera;
     private final MainCharacter character;
@@ -27,15 +22,21 @@ public class GameScreen implements Screen {
     private final Texture missileTexture;
     private final Array<Missile> missiles;
 
+    private long lastMissileGeneratedTime;
+    private long actualTime;
+    private long lastDifficultyChange;
+    private final PlatformCounter platformCounter;
+
     private final int numberOfPlatforms = 200;
     private final int distanceBetweenPlatforms = 230;
-    private float initialBulletsCreationInterval = 0.45f;
-    private final float difficultyIncreasingInterval = 20f;
+    private long missilesCreationInterval = 700;
+    private final long difficultyChangeInterval = 10000;
     private final float gravity = -18;
 
 
     public GameScreen(final MyGdxGame game) {
         this.game = game;
+
         platformCounter = new PlatformCounter();
 
         camera = new OrthographicCamera();
@@ -59,22 +60,6 @@ public class GameScreen implements Screen {
         missileTexture = new Texture(Gdx.files.internal("missile.png"));
         missiles = new Array<>();
 
-        missilesTimer = new Timer();
-        missilesTimer.scheduleTask(new Timer.Task() {
-            @Override
-            public void run() {
-                spawnBullets();
-            }
-        },0, initialBulletsCreationInterval);
-
-        difficultyTimer = new Timer();
-        difficultyTimer.scheduleTask(new Timer.Task() {
-            @Override
-            public void run() {
-                initialBulletsCreationInterval += 5;
-            }
-        }, 0, difficultyIncreasingInterval);
-
     }
 
     @Override
@@ -88,6 +73,10 @@ public class GameScreen implements Screen {
         camera.update();
         camera.position.set(Gdx.graphics.getWidth() / 2f, character.y + 180, 0);
         game.batch.setProjectionMatrix(camera.combined);
+
+        actualTime = System.currentTimeMillis();
+        spawnBullets();
+        increaseDifficulty();
 
         character.y += character.jumpVelocity * Gdx.graphics.getDeltaTime();
         character.jumpVelocity += gravity;
@@ -153,10 +142,25 @@ public class GameScreen implements Screen {
     }
 
     private void spawnBullets() {
-        Missile missile = new Missile();
-        missile.x = missile.getRandomX();
-        missile.y = camera.position.y + 1000;
-        missiles.add(missile);
+        if(actualTime - lastMissileGeneratedTime > missilesCreationInterval) {
+            Missile missile = new Missile();
+            missile.x = missile.getRandomX();
+            missile.y = camera.position.y + 1000;
+            missiles.add(missile);
+            lastMissileGeneratedTime = System.currentTimeMillis();
+        }
+    }
+
+    private void increaseDifficulty() {
+        if(missilesCreationInterval == 200) {
+            return;
+        }
+
+        if(actualTime - lastDifficultyChange > difficultyChangeInterval) {
+            missilesCreationInterval -= 100;
+            lastDifficultyChange = System.currentTimeMillis();
+        }
+
     }
 
     private boolean isCharacterOnPlatform(Platform platform) {
